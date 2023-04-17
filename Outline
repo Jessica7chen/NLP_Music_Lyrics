@@ -1,16 +1,13 @@
 I say we use this text file as a basic outline to start.
 They have a tab named "Projects" we can use to create a more aesthetically pleasing outline with bins "To do", "In Progress", and "Done".
-
 Once I commit this file to Tyra's repository it becomes public for any collaborators, our group, to edit.
 I believe it keeps a history of the changes to the files we upload, and you can comment what you've changed to the file when you commit it.
 I say we play around with this text file as a way to test how this system works. It seems very similar to Google Drive.
-
-Luke
+- Luke
 
 Update: After posting I saw there is a button that says "History" in the top right of the window. You can see the comments and history of the file.
 This seems very useful for actual code as you can see how it progresses and who progresses it and what their intentions are.
-
-Luke
+- Luke
 
 Hi Luke, thank you for explaining this is such great detail. Let's see how my comment looks. 
 Also I wanted to add that I tried to download and upload the data into my R and my laptop was on the verge of exploding. 
@@ -19,5 +16,4 @@ I hope you guys have better luck than I did.
 
 That's funny. It's 3 GB so there is a lot of data to be unpacked. I'm downloading it now. I can sample the data and upload it to Github so it's
 easier on our computers. 3 GB seems overkill to start.
-
-Luke
+- Luke
