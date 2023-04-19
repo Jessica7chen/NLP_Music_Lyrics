@@ -34,3 +34,6 @@ generateTDM <- function(category,words){
 
 # attach category to tdm
 bindCategoryTDM <- function(tdm){}
+
+library(readr)
+read.csv()
