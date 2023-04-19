@@ -26,3 +26,18 @@ Things to consider/research: NLP library to use, model to predict decade, how to
 Here's a URL that I posted to the code that I'm basing a lot of my project notes on.
 https://www.youtube.com/watch?v=j1V2McKbkLo
 - Luke
+
+
+
+Ari's project outline:
+Steps:
+
+1. Import the song data (API or dataset): (GeniusAPI, MusixMatchAPI, LyricFind API)
+2. Clean Data: remove punctuation, stop words, convert to lowercase
+3. Feature extraction (or converting words into numbers): 	
+      Bag of words: counts word distribution and represents as vector. Focuses on frequency while ignoring order/context
+      Word embeddings: captures words with similar meanings and groups them together
+      NER: categorizes words (names, places, companies…)
+      POS: notes the part of speech of different words
+4. Decide on a model to use (random forest, decision trees, SVM, neural net)
+5. Split data into training and testing and train the model
