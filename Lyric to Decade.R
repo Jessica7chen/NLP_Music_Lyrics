@@ -36,4 +36,4 @@ generateTDM <- function(category,words){
 bindCategoryTDM <- function(tdm){}
 
 library(readr)
-read.csv()
+read.csv("/Users/arimorrison1/Downloads/song_lyrics.csv")
