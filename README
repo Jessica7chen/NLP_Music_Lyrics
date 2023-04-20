@@ -31,7 +31,6 @@ https://www.youtube.com/watch?v=j1V2McKbkLo
 
 Ari's project outline:
 Steps:
-
 1. Import the song data (API or dataset): (GeniusAPI, MusixMatchAPI, LyricFind API)
 2. Clean Data: remove punctuation, stop words, convert to lowercase
 3. Feature extraction (or converting words into numbers): 	
@@ -41,3 +40,7 @@ Steps:
       POS: notes the part of speech of different words
 4. Decide on a model to use (random forest, decision trees, SVM, neural net)
 5. Split data into training and testing and train the model
+
+This is good, I didn't know of NER or POS. Are there any resources you were going off of that I could check out?
+Also, for #3 and #2 wouldn't order/context matter if we're doing POS?
+- Luke
