@@ -44,3 +44,10 @@ Steps:
 This is good, I didn't know of NER or POS. Are there any resources you were going off of that I could check out?
 Also, for #3 and #2 wouldn't order/context matter if we're doing POS?
 - Luke
+
+
+Tyra:
+I am going to be putting the code that I found from Kaggle. I used this code on the old lyric dataset to see if it works.
+It did work, but I'm sure if it contributes to the goal that we are trying to accomplish.
+It does NLP for topic modeling. I include a link below and add the code to the R. 
+Link: https://www.kaggle.com/code/rtatman/nlp-in-r-topic-modelling/notebook
