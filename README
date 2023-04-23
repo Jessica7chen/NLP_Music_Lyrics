@@ -4,31 +4,29 @@ Once I commit this file to Tyra's repository it becomes public for any collabora
 I believe it keeps a history of the changes to the files we upload, and you can comment what you've changed to the file when you commit it.
 I say we play around with this text file as a way to test how this system works. It seems very similar to Google Drive.
 - Luke
-
+----------
 Update: After posting I saw there is a button that says "History" in the top right of the window. You can see the comments and history of the file.
 This seems very useful for actual code as you can see how it progresses and who progresses it and what their intentions are.
 - Luke
-
+----------
 Hi Luke, thank you for explaining this is such great detail. Let's see how my comment looks. 
 Also I wanted to add that I tried to download and upload the data into my R and my laptop was on the verge of exploding. 
 I hope you guys have better luck than I did. 
 - Tyra
-
+----------
 That's funny. It's 3 GB so there is a lot of data to be unpacked. I'm downloading it now. I can sample the data and upload it to Github so it's
 easier on our computers. 3 GB seems overkill to start.
 - Luke
-
+----------
 I uploaded an outline that is a work in progress. I propose that file to be the file we all use to code on. So, I recommend you save it locally
 and prepare your own outline for Wednesday so we can discuss the project further on Wednesday.
 Things to consider/research: NLP library to use, model to predict decade, how to use and connect the two.
 - Luke
-
+----------
 Here's a URL that I posted to the code that I'm basing a lot of my project notes on.
 https://www.youtube.com/watch?v=j1V2McKbkLo
 - Luke
-
-
-
+----------
 Ari's project outline:
 Steps:
 1. Import the song data (API or dataset): (GeniusAPI, MusixMatchAPI, LyricFind API)
@@ -40,14 +38,19 @@ Steps:
       POS: notes the part of speech of different words
 4. Decide on a model to use (random forest, decision trees, SVM, neural net)
 5. Split data into training and testing and train the model
-
+----------
 This is good, I didn't know of NER or POS. Are there any resources you were going off of that I could check out?
 Also, for #3 and #2 wouldn't order/context matter if we're doing POS?
 - Luke
-
-
-Tyra:
+----------
 I am going to be putting the code that I found from Kaggle. I used this code on the old lyric dataset to see if it works.
 It did work, but I'm not sure if it contributes to the goal that we are trying to accomplish.
 It does NLP for topic modeling. I include a link below and added the code to the R codespace. 
 Link: https://www.kaggle.com/code/rtatman/nlp-in-r-topic-modelling/notebook
+- Tyra
+----------
+I sampled the dataset to only include 50k english titles. There were other characters (Russian was what I saw) that would've
+made our project a little trickier. The link to it is below. The final file size is 87mb and we can resample if that's too large.
+https://www.dropbox.com/s/h7w6jc1r85ogcqd/song_lyrics_sample.csv?dl=0
+- Luke
+----------
