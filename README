@@ -52,5 +52,6 @@ Link: https://www.kaggle.com/code/rtatman/nlp-in-r-topic-modelling/notebook
 I sampled the dataset to only include 50k english titles. There were other characters (Russian was what I saw) that would've
 made our project a little trickier. The link to it is below. The final file size is 87mb and we can resample if that's too large.
 https://www.dropbox.com/s/h7w6jc1r85ogcqd/song_lyrics_sample.csv?dl=0
+I also uploaded the code to sampling the df if anyone was curious.
 - Luke
 ----------
