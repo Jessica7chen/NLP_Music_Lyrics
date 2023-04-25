@@ -1,0 +1,41 @@
+#This is mainly an easy way for me to share very rough code that's not ready for the main section
+
+song_data <- read.csv("song_lyrics_sample.csv")
+head(song_data)
+#want to keep columns: id, title, lyrics, year, tag
+names(song_data)
+
+song_data <- subset(song_data, select = -c(artist,views,features,language_cld3,language_ft,language))
+names(song_data)
+#we now have the data with only X, title, tag, year, lyrics, and id. Tag was kept in case we later want to analyze genre
+
+song_data$year <- as.numeric(song_data$year)
+summary(song_data$year)
+sum(song_data$year<=1999) - sum(song_data$year<1990) #3337 in 90's
+sum(song_data$year<=1989) - sum(song_data$year<1980) #1444 in 80's
+sum(song_data$year<=1979) - sum(song_data$year<1970) #977 in 70's
+sum(song_data$year<=1969) - sum(song_data$year<1960) #588 in 60's
+sum(song_data$year<=1959) - sum(song_data$year<1950) #139 in 50's
+sum(song_data$year<=1949) #395 in 40's or earlier
+
+library(dplyr)
+
+song_data <- song_data %>%
+  mutate(decade = floor(year / 10) * 10)
+
+
+names(song_data)
+table(song_data$decade)
+song_data$decade <- as.numeric(song_data$decade)
+
+#We can see that we only start seeing 500+ obs at decade=1960. I will remove everything before that
+
+song_data <- song_data %>%
+  filter(decade >= 1960)
+table(song_data$decade)
+
+#We can see that we now have a decade column that only includes decades that have at least 500 obs. 
+
+song_data$lyrics <- gsub("[[:punct:]]", "", song_data$lyrics) #remove punctuation from lyrics
+song_data$lyrics <- gsub("\\s", "", song_data$lyrics) #remove white space from lyrics
+song_data$lyrics <- tolower(song_data$lyrics)
