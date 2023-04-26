@@ -1,41 +1,77 @@
-#This is mainly an easy way for me to share very rough code that's not ready for the main section
+library(dplyr)
+install.packages('tm')
+install.packages('SnowballC')
+library('tm')
+library('SnowballC')
 
+setwd("/Users/arimorrison1/Downloads")
 song_data <- read.csv("song_lyrics_sample.csv")
 head(song_data)
 #want to keep columns: id, title, lyrics, year, tag
 names(song_data)
 
-song_data <- subset(song_data, select = -c(artist,views,features,language_cld3,language_ft,language))
-names(song_data)
+song_data_subset <- subset(song_data, select = -c(artist,views,features,language_cld3,language_ft,language))
+names(song_data_subset)
 #we now have the data with only X, title, tag, year, lyrics, and id. Tag was kept in case we later want to analyze genre
 
-song_data$year <- as.numeric(song_data$year)
-summary(song_data$year)
-sum(song_data$year<=1999) - sum(song_data$year<1990) #3337 in 90's
-sum(song_data$year<=1989) - sum(song_data$year<1980) #1444 in 80's
-sum(song_data$year<=1979) - sum(song_data$year<1970) #977 in 70's
-sum(song_data$year<=1969) - sum(song_data$year<1960) #588 in 60's
-sum(song_data$year<=1959) - sum(song_data$year<1950) #139 in 50's
-sum(song_data$year<=1949) #395 in 40's or earlier
+song_data_subset$year <- as.numeric(song_data_subset$year)
+summary(song_data_subset$year)
 
-library(dplyr)
-
-song_data <- song_data %>%
+song_data_subset <- song_data_subset %>%
   mutate(decade = floor(year / 10) * 10)
 
 
-names(song_data)
-table(song_data$decade)
-song_data$decade <- as.numeric(song_data$decade)
+names(song_data_subset)
+table(song_data_subset$decade)
+song_data_subset$decade <- as.numeric(song_data_subset$decade)
 
 #We can see that we only start seeing 500+ obs at decade=1960. I will remove everything before that
 
-song_data <- song_data %>%
+song_data_subset <- song_data_subset %>%
   filter(decade >= 1960)
-table(song_data$decade)
+table(song_data_subset$decade)
 
 #We can see that we now have a decade column that only includes decades that have at least 500 obs. 
 
-song_data$lyrics <- gsub("[[:punct:]]", "", song_data$lyrics) #remove punctuation from lyrics
-song_data$lyrics <- gsub("\\s", "", song_data$lyrics) #remove white space from lyrics
-song_data$lyrics <- tolower(song_data$lyrics)
+#cleaning the lyric data
+corpus <- VCorpus(VectorSource(song_data_subset$lyrics))
+corpus <- tm_map(corpus, content_transformer(tolower)) #convert to lower case
+corpus <- tm_map(corpus, removeNumbers) #remove numbers
+corpus <- tm_map(corpus, removePunctuation) #remove punctuation
+corpus <- tm_map(corpus, removeWords, stopwords()) #removes common words that don't add much content
+corpus <- tm_map(corpus, stemDocument) #converts words to their root (loved -> love)
+corpus <- tm_map(corpus, stripWhitespace) #stemming should already get rid of extra space, but just in case....
+
+#Creating Bag of Words Model
+dtm <- DocumentTermMatrix(corpus)
+dtm <- removeSparseTerms(dtm, 0.999) #keeps songs with words that appear very infrequently
+dataset <- as.data.frame(as.matrix(dtm)) #turning our corpus into a dataset
+dataset$decade <- song_data_subset$decade #adding the dependant variable 'decade' to the dataset
+
+#At this point at 26:30 in https://www.youtube.com/watch?v=b086biAvlc8&ab_channel=Schaly the host runs a model which I will show below:
+
+#Training a random forest
+dataset$decade <- factor(dataset$decade, levels=c(1960,1970,1980,1990,2000,2010,2020))
+
+#Splitting into training and testing:
+install.packages("caTools")
+library(caTools)
+set.seed(123)
+split <- sample.split(dataset$decade, SplitRatio = 0.8) #train model on 80% of data, leaving 20% for test
+training_set <- subset(dataset, split == TRUE)
+testing_set <- subset(dataset, split == FALSE)
+
+#fitting random forest classification to the trainin set
+install.packages("randomForest")
+library(randomForest)
+set.seed(123)
+classifier <- randomForest(x = training_set[-6347], #exclude the last column from the x's
+                           y = training_set$decade,
+                           ntree = 10) #10 decision trees to save some time
+
+#predicting the test set results
+y_pred <- predict(classifier, newdata = testing_set[-6347]) #excluding the last column as that's what's being predicted
+
+#making the confusion matrix
+cm <- table(testing_set[, 6347], y_pred)
+cm
