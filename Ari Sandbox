@@ -74,4 +74,6 @@ y_pred <- predict(classifier, newdata = testing_set[-6347]) #excluding the last 
 
 #making the confusion matrix
 cm <- table(testing_set[, 6347], y_pred)
-cm
+accuracy <- sum(diag(cm)) / sum(cm)
+accuracy
+
