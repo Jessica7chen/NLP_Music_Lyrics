@@ -1,0 +1,22 @@
+---
+title: "Stat Learning Project Add Decade"
+output: html_document
+date: "2023-04-25"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Read song_lyrics_sample file
+```{r}
+song_lyrics <- read.csv("song_lyrics.csv")
+glimpse(song_lyrics)
+
+clean_song_lyrics <- song_lyrics %>%
+  mutate(decade=ifelse(between(year, 1970, 1979), "1970s", ifelse(between(year, 1980, 1989),"1980s",ifelse(between(year, 1990, 1999),"1990s",ifelse(between(year,2000 , 2010),"2000s",ifelse(between(year,2010 , 2019),"2010s",ifelse(between(year,2020 , 2029),"2020s","")))))))
+
+glimpse(clean_song_lyrics)
+```
+
