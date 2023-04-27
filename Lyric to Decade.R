@@ -1,36 +1,48 @@
 # Song Lyric Decade Project
 
-# based off this https://www.youtube.com/watch?v=j1V2McKbkLo
+# initialize environment
+library(tm)
+library(NLP)
+library(SnowballC)
+# load data
+song.data<-read.csv("/Users/lukebeebe/Documents/School/Rutgers/Spring 2023/Applied Stat Project/song_lyrics_sample.csv")
+song.data<-song.data[,c(1,2,3,5,8)] # keeps id, title, lyrics, year, tag
+decade<-floor(song.data$year/10)*10 # create decade vector
+song.data$decade<-decade # save decade as column
+song.data<-subset(song.data,decade>=1960)
+# function that tallies unique numbers, produces plot, 
+unique.count <- function(data){
+  x=unique(data)
+  y=NULL
+  i=1
+  for(i in i:length(x)){y<-append(y,sum(data==x[i]))}
+  plot(x,y,type='h',xlab='unique',ylab='count',lwd=5)
+  return(y[order(x)])
+}
+unique.count(song.data$decade) # exponential growth of songs in sample
 
-# initialize environment:
-#   load libraries and data (can be done retroactively)
-#   choose NLP language to work with - something popular that's both in R and Python
-#   create sample dataset - train/test data
-
-# clean data:
-#   keep only necessary data to start (lyrics, year, decade) 
-#   create variable "decade"
-#     will it be more accurate predicting year then figuring decade, or predicting decade?
-#   remove punctuation, remove stop words, remove whitespace, lowercase
-#   lemmatize (found->find), stem (playing->play)
-#   tokenize ("Down the street the dogs are barking"->"down","street","dog","bark")
-#       I think ours should only inspect single words associated with decade/genre
-#       it would be technically difficult to study lyric prose and how words associate
-#       with other words as a beginner project
-clean <- function(x){
-  # Find NLP library that does this for us
-  return(x.clean)
+# clean data function using tm
+clean <- function(corpus){
+  corpus <- VCorpus(VectorSource(corpus))
+  corpus <- tm_map(corpus, content_transformer(tolower))
+  corpus <- tm_map(corpus, removeNumbers)
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeWords, stopwords("en")) # removes common words (the...)
+  corpus <- tm_map(corpus, stemDocument) # loved->love
+  corpus <- tm_map(corpus, stripWhitespace)
+  return(corpus)
+}
+# build term document matrix
+generateTDM <- function(category,corpus){
+  corpus<-clean(corpus)
+  tdm<-DocumentTermMatrix(corpus)
+  tdm<-removeSparseTerms(tdm,0.99) # removes sparse words
+  df<-as.data.frame(as.matrix(tdm))
+  df$category<-category
+  # NORMALIZE DATA SO UNEVEN DISTRIBUTION BECOMES UNIFORM
+  # normalize.df(df,length(df))
+  return(df)
 }
 
-# build term document matrix (we have to research our model)
-#   this turns words into numbers, preparing data for model
-#   this is our main function that uses 'clean'
-generateTDM <- function(category,words){
-  words.clean<-clean(words)
-  words.tdm<-TermDocumentMatrix(words.clean) # Find NLP library that does this for us
-  words.tdm<-removeSparseTerms(words.clean,0.7) # Find NLP library that does this for us
-  list(category=category,tdm=words.tdm)
-}
-
-# attach category to tdm
-bindCategoryTDM <- function(tdm){}
+# running program, creating df
+df<-generateTDM(song.data$decade,song.data$lyrics)
