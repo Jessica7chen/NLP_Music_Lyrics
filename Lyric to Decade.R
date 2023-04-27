@@ -35,8 +35,8 @@ clean <- function(corpus){
 # build term document matrix
 generateTDM <- function(category,corpus){
   corpus<-clean(corpus)
-  tdm<-DocumentTermMatrix(corpus)
-  tdm<-removeSparseTerms(tdm,0.99) # removes sparse words
+  tdm<-TermDocumentMatrix(corpus)
+  tdm<-removeSparseTerms(tdm,0.95) # removes sparse words
   df<-as.data.frame(as.matrix(tdm))
   df$category<-category
   # NORMALIZE DATA SO UNEVEN DISTRIBUTION BECOMES UNIFORM
