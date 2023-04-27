@@ -59,7 +59,6 @@ I just created a file called "Exploratory Data Analysis" for us to make graphs t
 Things like most common words by decade might be an interesting addition to our presentation. 
 - Ari
 ----------
-
 Structure of our Presentation 
 Include a timeline of how we got to our final product 
 -Proposal
@@ -72,5 +71,9 @@ Anish - Cleaning & Grouping Code
 
 - Tyra 
 ----------
-
-
+I updated the main file. I cleaned up the code (we didn't need tidyverse), made things into functions, and got up until we deploy the model. Ari your code was big help. I am tinkering with code to make the messy data more regular, and I'm very close to being finished. I wrote a few plot functions into them so we can see what it's doing, however Tyra's Kaggle code has much prettier plots. When I finish up we'll try running the model. We should try a few different models.
+Anish and Ari can you do some research on different algorithms to deploy?
+I'd like to try KNN. RandomForest is good, but it's based on classification models which I am skeptical of for this project. Tyra and Jessica when I post the new new code you should check out the plots, and get familiar with the dataframe generateTDM() creates, that's where we'll get most of our fun information from. I'm going to post a link to a 'wordcloud' article to look into. Anyway, I'm going to bed.
+https://towardsdatascience.com/create-a-word-cloud-with-r-bde3e7422e8a
+-Luke
+----------
