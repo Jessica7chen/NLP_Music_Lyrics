@@ -77,3 +77,6 @@ I'd like to try KNN. RandomForest is good, but it's based on classification mode
 https://towardsdatascience.com/create-a-word-cloud-with-r-bde3e7422e8a
 -Luke
 ----------
+I updated the code, got the new function to work. It posts two plots that show you what's going on. It takes some time to run on my laptop, so it might take some time to run on yours too. I can explain it over our next zoom. Ari can you run this code through the model and see how it works, if it works?
+-Luke
+----------
