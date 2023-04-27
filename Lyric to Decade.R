@@ -3,7 +3,6 @@
 # initialize environment
 library(tm)
 library(NLP)
-library(SnowballC)
 # load data
 song.data<-read.csv("/Users/lukebeebe/Documents/School/Rutgers/Spring 2023/Applied Stat Project/song_lyrics_sample.csv")
 song.data<-song.data[,c(1,2,3,5,8)] # keeps id, title, lyrics, year, tag
