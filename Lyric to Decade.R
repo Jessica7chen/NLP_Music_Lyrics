@@ -1,24 +1,17 @@
 # initialize environment
 library(NLP)
 library(tm)
-
+library(class)
+library(e1071)
+library(randomForest)
 # load data
 song.data<-read.csv("/Users/lukebeebe/Documents/School/Rutgers/Spring 2023/Applied Stat Project/song_lyrics_sample.csv")
 song.data<-song.data[,c(1,2,3,5,8)] # keeps id, title, lyrics, year, tag
 decade<-floor(song.data$year/10)*10 # create decade vector
 song.data$decade<-decade # save decade as column
 song.data<-subset(song.data,decade>=1960)
-
-# function that tallies unique numbers, produces plot
-unique.count <- function(data){
-  x=unique(data)
-  y=NULL
-  i=1
-  for(i in i:length(x)){y<-append(y,sum(data==x[i]))}
-  plot(x,y,type='h',xlab='unique',ylab='count',lwd=5)
-  return(y[order(x)])
-}
-unique.count(song.data$decade) # exponential growth of songs in sample
+table(song.data$decade)
+table(song.data$tag)
 
 # clean data function using tm
 clean <- function(corpus){
@@ -31,9 +24,8 @@ clean <- function(corpus){
   corpus<-tm_map(corpus,stripWhitespace)
   return(corpus)
 }
-
 # code to make uneven distribution more even/uniform
-normalize.df<-function(df,colNum){
+weight.df <- function(df,colNum){
   dfb<-df[-colNum] # dfb without colNum
   par(mfrow=c(2,1)) # sets plots up
   cat<-unique(df[,colNum]) # categories of colNum
@@ -45,7 +37,6 @@ normalize.df<-function(df,colNum){
     print(c(cat[i],count)) # print total sums
     counts<-append(counts,count) # vector of total sums
   }
-  print(sum(counts))
   plot(cat,counts,type='h',xlab='unique',ylab='count',main='old values',lwd=5,ylim=c(0,max(counts)))
   answer=readline("Would you like to make data uniform? (Y/N): ")
   if(tolower(answer)=="y"){
@@ -61,12 +52,10 @@ normalize.df<-function(df,colNum){
       print(c(cat[i],count))
     }
     plot(cat,counts,type='h',xlab='unique',ylab='count',main='new values',lwd=5,ylim=c(0,max(counts)))
-    print(sum(counts))
   }
   dfb$category<-df[colNum] # return original column values
   return(dfb)
 }
-
 # build term document matrix, even it out
 generateDTM <- function(category,corpus){
   corpus<-clean(corpus)
@@ -74,10 +63,38 @@ generateDTM <- function(category,corpus){
   dtm<-removeSparseTerms(dtm,0.99) # removes sparse words
   df<-as.data.frame(as.matrix(dtm))
   df$category<-category
-  df<-normalize.df(df,length(df))
+  df<-weight.df(df,length(df))
   return(df)
 }
-
 # running program, creating df
 df<-generateDTM(song.data$decade,song.data$lyrics)
-sum(df[,-length(df)]) # heckkkkk yes, they equal the same
+
+# getting ready for models
+df.factor<-df
+df.factor$category<-as.factor(df.factor$category$category)
+set.seed(123)
+index<-sample(c(T,F),nrow(df),replace=T,prob=c(0.7,0.3))
+train.factor<-df.factor[index,]
+test.factor<-df.factor[!index,]
+# svm - TOO SLOW
+#svm <- svm(x=train.factor[-length(train.factor)],
+#           y=train.factor[length(train.factor)],
+#           kernel = 'linear',
+#           cost=1,
+#           type = 'C-classification')
+#print(svm)
+#plot(svm)
+# randomForest
+rf <- randomForest(x=train.factor[-length(train.factor)],
+                   y=train.factor$category,
+                   ntree=10)
+rf.y<-predict(rf,newdata=test.factor[-length(test.factor)])
+cm<-table(test.factor$category,rf.y)
+acc<-sum(diag(cm))/sum(cm)
+acc
+# knn - TOO SLOW
+#knn <- knn(train=train[,-length(train)],
+#           test=test[,-length(test)],
+#           cl=train[,length(train)]$category,
+#           k=5 #round(sqrt(nrow(train)))
+#           )
