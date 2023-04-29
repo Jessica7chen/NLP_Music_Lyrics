@@ -91,3 +91,6 @@ I ran the genres through the model, it's more accurate than decades. There's onl
 Thanks for all the codes! There are two problems I met after I ran all the code. Since Luke mentioned that there should be two plots, but I only got one. The one I have now is about old values(decade & count). Besides that, I also ran the code Luke provided for DTM. sort(colSums(df[df$category=='rap',-length(df)]),decreasing = T)[1:10]. I get an output of all zeros, can't find out what went wrong so far.
 -Jessica
 ----------
+I'll post the code I'm currently running, it's more basic and straight forward. I'll post it seperately as 'Gutted Lyric to Decade'. Should work better.
+-Luke
+----------
