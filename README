@@ -94,3 +94,8 @@ Thanks for all the codes! There are two problems I met after I ran all the code.
 I'll post the code I'm currently running, it's more basic and straight forward. I'll post it seperately as 'Gutted Lyric to Decade'. Should work better.
 -Luke
 ----------
+Another update. I sampled the df uniformly by both decade and genre. Feel free to play around with it. I'd advise using the "Gutted Lyrics to Decade" code. It should help KNN which I've gotten to work. At the very least the predictions will get better. I also did another thing to just fool around. I made vectors of the percentages of the words for each decade and only trained the model on that. It was horrendously innaccurate at about 17% on KNN haha. I'm going to fool around with removeSparseTerms too. But I'm going to take a break for a little. I'm not sure if anyone is reading this-lol.
+https://www.dropbox.com/s/zeakk9nsn13clw6/songs_uniformbydecade.csv?dl=0 
+https://www.dropbox.com/s/v7augxdl6xqcozz/songs_uniformbygenre.csv?dl=0 
+-Luke
+----------
