@@ -1,9 +1,9 @@
 # initialize environment
-library(NLP)
-library(tm)
-library(class)
-library(e1071)
-library(randomForest)
+library(NLP) # incorporate machine learning and deep learning techniques.
+library(tm) # statistical and computational methods for analyzing text data
+library(class) # classify text data into different categories or classes based on their features or content
+library(e1071) # functions for SVM training and classification
+library(randomForest) # train on features and labels to predict categories for text instances
 # load data
 song.data<-read.csv("/Users/lukebeebe/Documents/School/Rutgers/Spring 2023/Applied Stat Project/song_lyrics_sample.csv")
 song.data<-song.data[,c(1,2,3,5,8)] # keeps id, title, lyrics, year, tag
