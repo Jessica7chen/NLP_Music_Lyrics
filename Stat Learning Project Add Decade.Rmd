@@ -6,17 +6,126 @@ date: "2023-04-25"
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(RColorBrewer)
+library(wordcloud)
+library(ggwordcloud)
+library(plotly)
+library(NLP)
+library(tm)
+library(class)
+library(e1071)
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #### Read song_lyrics_sample file
 ```{r}
-song_lyrics <- read.csv("song_lyrics.csv")
+set.seed(123)
+song_lyrics <- read.csv("song_lyrics.csv", encoding="UTF-8")
+genre <- read.csv("genre_count.csv", encoding="UTF-8")
+glimpse(genre)
 glimpse(song_lyrics)
 
 clean_song_lyrics <- song_lyrics %>%
-  mutate(decade=ifelse(between(year, 1970, 1979), "1970s", ifelse(between(year, 1980, 1989),"1980s",ifelse(between(year, 1990, 1999),"1990s",ifelse(between(year,2000 , 2010),"2000s",ifelse(between(year,2010 , 2019),"2010s",ifelse(between(year,2020 , 2029),"2020s","")))))))
+  select(id, title, lyrics, year, tag) %>%
+  mutate(decade=ifelse(between(year, 1960, 1969), 1960,ifelse(between(year, 1970, 1979), 1970, ifelse(between(year, 1980, 1989),1980,ifelse(between(year, 1990, 1999),1990,ifelse(between(year,2000 , 2010),2000,ifelse(between(year,2010 , 2019),2010,ifelse(between(year,2020 , 2029),2020,""))))))))%>%
+  subset(decade>=1960)
 
 glimpse(clean_song_lyrics)
+
+clean_song_lyrics_sample <- sample_n(clean_song_lyrics, 500)             
+glimpse(clean_song_lyrics_sample) 
+```
+#### Wordcloud for Genre
+```{r}
+# define a nice color palette
+pal <- brewer.pal(8,"Set3")
+
+set.seed(42)
+genre %>%
+  ggplot(aes(label = Row.Labels,size = Count.of.tag,color = factor(sample.int(10, nrow(genre), replace = TRUE)))) +
+  geom_text_wordcloud_area() +
+  scale_size_area(max_size = 60) +
+  theme_minimal()
+
+```
+
+#### Wordcloud for words within a Genre
+#### Prepare data for wordcloud
+```{r}
+# clean data function using tm
+clean <- function(corpus){
+  corpus<-VCorpus(VectorSource(corpus))
+  corpus<-tm_map(corpus,content_transformer(tolower))
+  corpus<-tm_map(corpus,removeNumbers)
+  corpus<-tm_map(corpus,removePunctuation)
+  corpus<-tm_map(corpus,removeWords, stopwords('en')) # removes common words (the...)
+  corpus<-tm_map(corpus,stemDocument) # loved->love
+  corpus<-tm_map(corpus,stripWhitespace)
+  print(corpus)
+  return(corpus)
+}
+# build document term matrix, even it out
+generateDTM <- function(category,corpus){
+  corpus<-clean(corpus)
+  dtm<-DocumentTermMatrix(corpus)
+  dtm<-removeSparseTerms(dtm,0.95) # removes sparse words
+  df<-as.data.frame(as.matrix(dtm))
+  df$category<-category
+  return(df)
+}
+
+
+# running program, creating df
+df<-generateDTM(clean_song_lyrics_sample$tag,clean_song_lyrics_sample$lyrics)
+df$category
+
+df_long<-df %>%
+  pivot_longer(!category, names_to = "word", values_to = "count")
+
+View(df_long)
+  
+
+```
+
+#### Wordcloud for Pop
+```{r}
+scale=c(3.5,0.25)
+set.seed(123)
+df_long_pop<-df_long %>%
+  filter(category=="pop")%>%
+  arrange(desc(count)) 
+View(df_long_pop)
+  
+wordcloud(words = df_long_pop$word, freq = df_long_pop$count, min.freq = 1,
+          max.words=100, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(5, "Set1"))
+```
+
+
+#### Luke's code
+```{r}
+# find which words are significant relative to other genres (totalsum - averagesum)
+dfRel<-NULL
+i<-1
+cat<-unique(df$category)
+cat
+for(i in i:length(cat)){
+  catWordCount<-colSums(df[df$category==cat[i],-length(df)])
+  nonCatWordCount<-colSums(df[df$category!=cat[i],-length(df)])/((length(cat)-1))
+  relevance<-catWordCount-nonCatWordCount
+  dfRel<-rbind(dfRel,relevance)
+}
+sort(dfRel[1,],decreasing=T)[1:30] # rap
+sort(dfRel[2,],decreasing=T)[1:15] # rb
+sort(dfRel[3,],decreasing=T)[1:15] # rock
+sort(dfRel[4,],decreasing=T)[1:15] # pop
+sort(dfRel[5,],decreasing=T)[1:15] # misc
+sort(dfRel[6,],decreasing=T)[1:15] # country
+
+View(dfRel)
+
+
+
 ```
 
